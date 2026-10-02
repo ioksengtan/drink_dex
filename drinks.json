@@ -1,0 +1,86 @@
+[
+  {
+    "id": "itoen-jinxuan-oolong-535",
+    "name": "伊藤園 金萱烏龍茶 535ml",
+    "sugar_per_100ml": 0,
+    "caffeine_per_100ml": 20,
+    "tea_type": "oolong",
+    "volume_ml": 535,
+    "additive_count": 2,
+    "sweetener_type": "none",
+    "verified": true,
+    "notes": "咖啡因標示為「20mg/100mL以下」，此處取上限；添加物：維生素C、小蘇打"
+  },
+  {
+    "id": "ochaen-mugicha-580",
+    "name": "御茶園 麥萃無糖麥茶 580ml",
+    "sugar_per_100ml": 0,
+    "caffeine_per_100ml": 0,
+    "tea_type": "herbal",
+    "volume_ml": 580,
+    "additive_count": 4,
+    "sweetener_type": "none",
+    "verified": true,
+    "notes": "添加物：香料(含焦糖色素)、維生素C、小蘇打、海洋濃縮礦物質液"
+  },
+  {
+    "id": "mrbrown-original-240",
+    "name": "伯朗咖啡 有糖 240ml",
+    "sugar_per_100ml": 7.1,
+    "caffeine_per_100ml": 53,
+    "tea_type": "coffee",
+    "volume_ml": 240,
+    "additive_count": 3,
+    "sweetener_type": "sugar",
+    "verified": false,
+    "notes": "資料來自電商整理頁，非官方；添加物：碳酸氫鈉、乳化劑、大豆卵磷脂"
+  },
+  {
+    "id": "mrbrown-2in1-nosugar-240",
+    "name": "伯朗二合一 無糖 240ml",
+    "sugar_per_100ml": 0,
+    "caffeine_per_100ml": 45,
+    "tea_type": "coffee",
+    "volume_ml": 240,
+    "additive_count": 3,
+    "sweetener_type": "none",
+    "verified": false,
+    "notes": "商品標示無糖，但營養標示的糖欄位被截斷，需核對（含奶粉，可能有微量乳糖）"
+  },
+  {
+    "id": "redbull-original-250",
+    "name": "紅牛 原味 250ml",
+    "sugar_per_100ml": 10.8,
+    "caffeine_per_100ml": 32,
+    "tea_type": "soda",
+    "volume_ml": 250,
+    "additive_count": 11,
+    "sweetener_type": "sugar",
+    "verified": false,
+    "notes": "糖量由「每瓶27g」換算，非台灣標示；添加物把維生素與牛磺酸、咖啡因都算進去"
+  },
+  {
+    "id": "redbull-sugarfree-250",
+    "name": "紅牛 無糖 250ml",
+    "sugar_per_100ml": 0,
+    "caffeine_per_100ml": 32,
+    "tea_type": "soda",
+    "volume_ml": 250,
+    "additive_count": 14,
+    "sweetener_type": "artificial",
+    "verified": true,
+    "notes": "零熱量零碳水；甜味劑：蔗糖素、醋磺內酯鉀"
+  },
+  {
+    "id": "coca-cola-330",
+    "name": "可口可樂 330ml",
+    "sugar_per_100ml": 10.6,
+    "caffeine_per_100ml": 8.7,
+    "tea_type": "soda",
+    "volume_ml": 330,
+    "additive_count": 4,
+    "sweetener_type": "sugar",
+    "verified": false,
+    "notes": "海外版標示，台灣版需核對；添加物：焦糖色素、磷酸、香料、咖啡因"
+  }
+]

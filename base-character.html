@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>飲料角色・基底體型</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #EEF2EF;
+  --panel: #F8FAF8;
+  --ink: #22302B;
+  --muted: #5B6B64;
+  --ground: #B9C9C0;
+  --shadow: rgba(34, 48, 43, .14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141D19; --panel: #1C2824; --ink: #E6EFEA; --muted: #9DB0A7;
+    --ground: #34463F; --shadow: rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141D19; --panel: #1C2824; --ink: #E6EFEA; --muted: #9DB0A7;
+  --ground: #34463F; --shadow: rgba(0, 0, 0, .35);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  line-height: 1.6;
+}
+main { max-width: 680px; margin: 0 auto; padding: 24px 16px 40px; }
+h1 { font-size: 1.35rem; margin: 0 0 6px; font-weight: 700; }
+.lead { margin: 0 0 20px; color: var(--muted); font-size: .95rem; }
+.row { background: var(--panel); border-radius: 14px; padding: 12px 8px 10px; margin-bottom: 14px; }
+.row h2 { font-size: .95rem; font-weight: 700; margin: 0 8px 2px; }
+.row h2 span { font-weight: 400; color: var(--muted); margin-left: 6px; }
+.row svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.labels { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: .8rem; }
+.labels b { display: block; font-weight: 500; }
+.labels i { font-style: normal; color: var(--muted); font-size: .75rem; }
+.layers { margin: 22px 0 0; font-size: .9rem; color: var(--muted); }
+.layers strong { color: var(--ink); font-weight: 500; }
+.ground { stroke: var(--ground); }
+.shadow { fill: var(--shadow); }
+</style>
+</head>
+<body>
+<main>
+  <h1>角色基底：4 種體型 × 3 種身高</h1>
+  <p class="lead">體型由每 100ml 含糖量決定，身高由容量決定。臉部（眼神、表情）已畫，服裝、髮型、配件還沒畫。</p>
+  <div id="rows"></div>
+  <h1 style="margin-top:28px">臉：3 種眼神 × 4 種表情</h1>
+  <p class="lead">眼神由咖啡因決定（橫向），表情由甜味來源決定（縱向）。這裡用標準身高、標準圓潤體型。</p>
+  <div id="faces"></div>
+  <p class="layers"><strong>圖層順序（由下到上）</strong>：體型 → 服裝 → 臉 → 髮型 → 配件。每個角色的 SVG 裡已先留好對應的空群組。</p>
+</main>
+
+<script>
+const BODY = [
+  { name: "修長少年", sugar: "0g",      w: 40 },
+  { name: "標準偏瘦", sugar: "1–4g",    w: 54 },
+  { name: "標準圓潤", sugar: "5–8g",    w: 72 },
+  { name: "圓滾滾",   sugar: "9g 以上", w: 96 },
+];
+const HEIGHT = [
+  { name: "嬌小", volume: "300ml 以下", h: 96 },
+  { name: "標準", volume: "300–600ml",  h: 120 },
+  { name: "高大", volume: "600ml 以上", h: 144 },
+];
+const GROUND = 240, HEAD_R = 26, INK = "#22302B", SKIN = "#F7D9BE";
+
+const EYES = [
+  { name: "睡眼惺忪", caffeine: "0mg" },
+  { name: "眼神清醒", caffeine: "1–29mg" },
+  { name: "睜大眼睛", caffeine: "30mg 以上" },
+];
+const EXPR = [
+  { name: "平靜",     sweetener: "無甜味" },
+  { name: "微笑",     sweetener: "天然糖" },
+  { name: "開心笑臉", sweetener: "糖" },
+  { name: "眨眼吐舌", sweetener: "人工甜味劑" },
+];
+const BLUSH = "#F2A0A0", TONGUE = "#E8707A", MOUTH_IN = "#7A2E3A";
+
+// 眼神（由咖啡因決定）。wink 時右眼改畫成彎弧。
+function eye(level, x, y, wink) {
+  const s = `stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"`;
+  if (wink) return `<path d="M ${x - 4} ${y + 1} Q ${x} ${y - 4} ${x + 4} ${y + 1}" fill="none" ${s}/>`;
+  if (level === 1) // 睡眼惺忪：半闔的眼皮
+    return `<path d="M ${x - 4} ${y} A 4 4 0 0 0 ${x + 4} ${y} Z" fill="${INK}" ${s}/>` +
+           `<path d="M ${x - 6} ${y} L ${x + 6} ${y}" fill="none" ${s}/>`;
+  if (level === 3) // 睜大眼睛：白眼球加瞳孔和高光
+    return `<circle cx="${x}" cy="${y}" r="6" fill="#fff" ${s}/><circle cx="${x}" cy="${y}" r="3" fill="${INK}"/>` +
+           `<circle cx="${x + 1.2}" cy="${y - 1.2}" r="1" fill="#fff"/>`;
+  return `<circle cx="${x}" cy="${y}" r="2.8" fill="${INK}"/>`; // 眼神清醒
+}
+
+// 表情（由甜味來源決定）：嘴型、腮紅、吐舌
+function mouth(expr, cx, y) {
+  const s = `stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+  if (expr === 1) return `<path d="M ${cx - 5} ${y + 1} L ${cx + 5} ${y + 1}" fill="none" ${s}/>`;
+  if (expr === 2) return `<path d="M ${cx - 6} ${y} Q ${cx} ${y + 6} ${cx + 6} ${y}" fill="none" ${s}/>`;
+  if (expr === 3) return `<path d="M ${cx - 7} ${y - 1} Q ${cx} ${y + 12} ${cx + 7} ${y - 1} Z" fill="${MOUTH_IN}" ${s}/>` +
+    `<circle cx="${cx - 15}" cy="${y - 2}" r="3.6" fill="${BLUSH}" opacity=".7"/><circle cx="${cx + 15}" cy="${y - 2}" r="3.6" fill="${BLUSH}" opacity=".7"/>`;
+  return `<path d="M ${cx - 6} ${y} Q ${cx} ${y + 5} ${cx + 6} ${y - 1}" fill="none" ${s}/>` +
+    `<path d="M ${cx + 1} ${y + 3.2} v 4 a 2.6 2.6 0 0 0 5.2 0 v -5.2 Z" fill="${TONGUE}" ${s}/>`;
+}
+
+function face(eyes, expr, cx, headCy) {
+  const wink = expr === 4;
+  return eye(eyes, cx - 9, headCy + 2, false) + eye(eyes, cx + 9, headCy + 2, wink) + mouth(expr, cx, headCy + 12);
+}
+
+// 以固定的頭、可變的軀幹與腿畫出一個角色；各圖層是獨立群組，之後可各自替換。
+// eyes：1～3（咖啡因級距）；expr：1～4（甜味來源：無／天然／糖／人工）
+function character(bodyLevel, heightLevel, cx, eyes = 2, expr = 1) {
+  const b = BODY[bodyLevel - 1], h = HEIGHT[heightLevel - 1].h;
+  const torsoH = Math.round(h * 0.58), legH = h - torsoH;
+  const legTop = GROUND - legH;
+  const torsoBottom = legTop + 6, torsoTop = torsoBottom - torsoH;
+  const headCy = torsoTop - HEAD_R + 10;
+  const legW = Math.max(14, Math.round(b.w * 0.26));
+  const legDx = b.w * 0.2;
+  const armLen = Math.round(torsoH * 0.62);
+  const stroke = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+
+  const arm = (side) => {
+    const x1 = cx + side * (b.w / 2 - 3), y1 = torsoTop + 14;
+    const x2 = cx + side * (b.w / 2 + 9), y2 = y1 + armLen;
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="15" stroke-linecap="round"/>` +
+           `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SKIN}" stroke-width="10" stroke-linecap="round"/>`;
+  };
+  const leg = (side) => {
+    const x = cx + side * legDx - legW / 2;
+    return `<rect x="${x}" y="${legTop}" width="${legW}" height="${legH}" rx="${legW / 2.4}" fill="${SKIN}" ${stroke}/>`;
+  };
+
+  return `
+  <g data-body="${bodyLevel}" data-height="${heightLevel}">
+    <ellipse class="shadow" cx="${cx}" cy="${GROUND + 2}" rx="${b.w / 2 + 18}" ry="6"/>
+    <g data-layer="body">
+      ${leg(-1)}${leg(1)}${arm(-1)}${arm(1)}
+      <rect x="${cx - b.w / 2}" y="${torsoTop}" width="${b.w}" height="${torsoH}"
+            rx="${Math.min(b.w / 2, torsoH * 0.45)}" fill="${SKIN}" ${stroke}/>
+      <circle cx="${cx}" cy="${headCy}" r="${HEAD_R}" fill="${SKIN}" ${stroke}/>
+    </g>
+    <g data-layer="outfit"></g>
+    <g data-layer="face">${face(eyes, expr, cx, headCy)}</g>
+    <g data-layer="hair"></g>
+    <g data-layer="accessories"></g>
+  </g>`;
+}
+
+const rows = document.getElementById("rows");
+HEIGHT.forEach((ht, hi) => {
+  const chars = BODY.map((_, bi) => character(bi + 1, hi + 1, 75 + bi * 150)).join("");
+  const labels = BODY.map(b => `<div><b>${b.name}</b><i>${b.sugar}</i></div>`).join("");
+  rows.insertAdjacentHTML("beforeend", `
+    <section class="row">
+      <h2>${ht.name}<span>${ht.volume}</span></h2>
+      <svg viewBox="0 48 600 212" role="img" aria-label="${ht.name}身高的四種體型">
+        <line class="ground" x1="8" y1="${GROUND + 4}" x2="592" y2="${GROUND + 4}" stroke-width="2"/>
+        ${chars}
+      </svg>
+      <div class="labels">${labels}</div>
+    </section>`);
+});
+
+const faces = document.getElementById("faces");
+EXPR.forEach((ex, xi) => {
+  const chars = EYES.map((_, ei) => character(3, 2, 100 + ei * 200, ei + 1, xi + 1)).join("");
+  const labels = EYES.map(e => `<div><b>${e.name}</b><i>${e.caffeine}</i></div>`).join("");
+  faces.insertAdjacentHTML("beforeend", `
+    <section class="row">
+      <h2>${ex.name}<span>${ex.sweetener}</span></h2>
+      <svg viewBox="0 76 600 184" role="img" aria-label="表情${ex.name}搭配三種眼神">
+        <line class="ground" x1="8" y1="${GROUND + 4}" x2="592" y2="${GROUND + 4}" stroke-width="2"/>
+        ${chars}
+      </svg>
+      <div class="labels" style="grid-template-columns:repeat(3,1fr)">${labels}</div>
+    </section>`);
+});
+</script>
+</body>
+</html>
