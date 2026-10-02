@@ -39,85 +39,46 @@ body {
 main { max-width: 680px; margin: 0 auto; padding: 24px 16px 40px; }
 h1 { font-size: 1.35rem; margin: 0 0 6px; font-weight: 700; }
 .lead { margin: 0 0 20px; color: var(--muted); font-size: .95rem; }
-.row { background: var(--panel); border-radius: 14px; padding: 12px 8px 10px; margin-bottom: 14px; }
+.row { background: #F8FAF8; color: #22302B; border-radius: 14px; padding: 12px 8px 10px; margin-bottom: 14px; }
 .row h2 { font-size: .95rem; font-weight: 700; margin: 0 8px 2px; }
-.row h2 span { font-weight: 400; color: var(--muted); margin-left: 6px; }
+.row h2 span { font-weight: 400; color: #5B6B64; margin-left: 6px; }
 .row svg { display: block; width: 100%; height: auto; max-width: 100%; }
 .labels { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: .8rem; }
 .labels b { display: block; font-weight: 500; }
-.labels i { font-style: normal; color: var(--muted); font-size: .75rem; }
+.labels i { font-style: normal; color: #5B6B64; font-size: .75rem; }
 .layers { margin: 22px 0 0; font-size: .9rem; color: var(--muted); }
 .layers strong { color: var(--ink); font-weight: 500; }
-.ground { stroke: var(--ground); }
-.shadow { fill: var(--shadow); }
-.toggle { display: inline-flex; gap: 0; margin: 0 0 18px; border: 1px solid var(--ground); border-radius: 999px; overflow: hidden; }
-.toggle button { font: inherit; font-size: .85rem; padding: 6px 16px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
-.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
-/* 手繪模式：紙張底色加紋理，角色套用抖動與顆粒濾鏡 */
-.sketch .row {
-  background-color: #FBF5E6; color: #3A2E22;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
-  box-shadow: 0 1px 0 rgba(58,46,34,.12);
-}
-.sketch .row h2 span, .sketch .labels i { color: #7A6A58; }
-.sketch .row svg [data-body] { filter: url(#hand); }
-.sketch .ground { stroke: #8C7B66; stroke-dasharray: 9 4 2 4; filter: url(#hand-line); }
-.sketch .shadow { fill: rgba(90,70,45,.16); }
+.ground { stroke: #B9C9C0; }
+.shadow { fill: rgba(34, 48, 43, .14); }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <!-- 手繪：低頻雜訊位移線條，高頻顆粒以相乘疊上，模擬紙上上色 -->
-    <filter id="hand" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="warp"/>
-      <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" xChannelSelector="R" yChannelSelector="G" result="wobbly"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2" result="grain"/>
-      <feColorMatrix in="grain" type="matrix" values="0.25 0 0 0 0.82  0.25 0 0 0 0.82  0.25 0 0 0 0.82  0 0 0 0 1" result="speckle"/>
-      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="11" result="blotch"/>
-      <feColorMatrix in="blotch" type="matrix" values="0.4 0 0 0 0.8  0.4 0 0 0 0.8  0.4 0 0 0 0.8  0 0 0 0 1" result="wash"/>
-      <feBlend in="wobbly" in2="wash" mode="multiply" result="washed"/>
-      <feBlend in="washed" in2="speckle" mode="multiply" result="textured"/>
-      <feComposite in="textured" in2="wobbly" operator="in"/>
-    </filter>
-    <filter id="hand-line" x="0" y="-50%" width="100%" height="200%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="3" result="w"/>
-      <feDisplacementMap in="SourceGraphic" in2="w" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </defs>
-</svg>
 <main>
   <h1>角色基底：4 種體型 × 3 種身高</h1>
-  <p class="lead">體型由每 100ml 含糖量決定，身高由容量決定。臉部（眼神、表情）已畫，服裝、髮型、配件還沒畫。</p>
-  <div class="toggle" role="group" aria-label="畫風">
-    <button type="button" data-style="vector" aria-pressed="true">向量</button>
-    <button type="button" data-style="sketch" aria-pressed="false">手繪風</button>
-  </div>
+  <p class="lead">體型由每 100ml 含糖量決定，身高由容量決定。Q 版比例；臉部（眼神、表情）和髮型已畫，服裝暫用統一的預設上衣，配件還沒畫。</p>
   <div id="rows"></div>
-  <h1 style="margin-top:28px">臉：3 種眼神 × 4 種表情</h1>
-  <p class="lead">眼神由咖啡因決定（橫向），表情由甜味來源決定（縱向）。這裡用標準身高、標準圓潤體型。</p>
+  <h1 style="margin-top:28px">臉與髮型：3 種咖啡因級距 × 4 種表情</h1>
+  <p class="lead">眼神與髮型都由咖啡因決定（橫向），表情由甜味來源決定（縱向）。這裡用標準身高、標準圓潤體型。</p>
   <div id="faces"></div>
   <p class="layers"><strong>圖層順序（由下到上）</strong>：體型 → 服裝 → 臉 → 髮型 → 配件。每個角色的 SVG 裡已先留好對應的空群組。</p>
 </main>
 
 <script>
 const BODY = [
-  { name: "修長少年", sugar: "0g",      w: 40 },
-  { name: "標準偏瘦", sugar: "1–4g",    w: 54 },
-  { name: "標準圓潤", sugar: "5–8g",    w: 72 },
-  { name: "圓滾滾",   sugar: "9g 以上", w: 96 },
+  { name: "修長少年", sugar: "0g",      w: 44 },
+  { name: "標準偏瘦", sugar: "1–4g",    w: 58 },
+  { name: "標準圓潤", sugar: "5–8g",    w: 76 },
+  { name: "圓滾滾",   sugar: "9g 以上", w: 100 },
 ];
 const HEIGHT = [
-  { name: "嬌小", volume: "300ml 以下", h: 96 },
-  { name: "標準", volume: "300–600ml",  h: 120 },
-  { name: "高大", volume: "600ml 以上", h: 144 },
+  { name: "嬌小", volume: "300ml 以下", h: 58 },
+  { name: "標準", volume: "300–600ml",  h: 76 },
+  { name: "高大", volume: "600ml 以上", h: 94 },
 ];
-const GROUND = 240, HEAD_R = 26, INK = "#22302B", SKIN = "#F7D9BE";
-
 const EYES = [
-  { name: "睡眼惺忪", caffeine: "0mg" },
-  { name: "眼神清醒", caffeine: "1–29mg" },
-  { name: "睜大眼睛", caffeine: "30mg 以上" },
+  { name: "睡眼惺忪", hair: "柔順服貼", caffeine: "0mg" },
+  { name: "眼神清醒", hair: "整齊俐落", caffeine: "1–29mg" },
+  { name: "睜大眼睛", hair: "頭髮炸開", caffeine: "30mg 以上" },
 ];
 const EXPR = [
   { name: "平靜",     sweetener: "無甜味" },
@@ -125,9 +86,11 @@ const EXPR = [
   { name: "開心笑臉", sweetener: "糖" },
   { name: "眨眼吐舌", sweetener: "人工甜味劑" },
 ];
+const GROUND = 240, HEAD_RX = 38, HEAD_RY = 35, LEG_H = 20;
+const INK = "#22302B", SKIN = "#FBDDC4", HAIR_COLOR = "#6B4A38", SHIRT = "#9CC9B8";
 const BLUSH = "#F2A0A0", TONGUE = "#E8707A", MOUTH_IN = "#7A2E3A";
 
-// 眼神（由咖啡因決定）。wink 時右眼改畫成彎弧。
+// 眼神（由咖啡因決定）。wink 時改畫成彎弧。座標以眼睛中心為準。
 function eye(level, x, y, wink) {
   const s = `stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"`;
   if (wink) return `<path d="M ${x - 4} ${y + 1} Q ${x} ${y - 4} ${x + 4} ${y + 1}" fill="none" ${s}/>`;
@@ -137,61 +100,79 @@ function eye(level, x, y, wink) {
   if (level === 3) // 睜大眼睛：白眼球加瞳孔和高光
     return `<circle cx="${x}" cy="${y}" r="6" fill="#fff" ${s}/><circle cx="${x}" cy="${y}" r="3" fill="${INK}"/>` +
            `<circle cx="${x + 1.2}" cy="${y - 1.2}" r="1" fill="#fff"/>`;
-  return `<circle cx="${x}" cy="${y}" r="2.8" fill="${INK}"/>`; // 眼神清醒
+  return `<circle cx="${x}" cy="${y}" r="3.2" fill="${INK}"/><circle cx="${x + 1}" cy="${y - 1}" r="1" fill="#fff"/>`;
 }
 
 // 表情（由甜味來源決定）：嘴型、腮紅、吐舌
 function mouth(expr, cx, y) {
   const s = `stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
-  if (expr === 1) return `<path d="M ${cx - 5} ${y + 1} L ${cx + 5} ${y + 1}" fill="none" ${s}/>`;
-  if (expr === 2) return `<path d="M ${cx - 6} ${y} Q ${cx} ${y + 6} ${cx + 6} ${y}" fill="none" ${s}/>`;
-  if (expr === 3) return `<path d="M ${cx - 7} ${y - 1} Q ${cx} ${y + 12} ${cx + 7} ${y - 1} Z" fill="${MOUTH_IN}" ${s}/>` +
-    `<circle cx="${cx - 15}" cy="${y - 2}" r="3.6" fill="${BLUSH}" opacity=".7"/><circle cx="${cx + 15}" cy="${y - 2}" r="3.6" fill="${BLUSH}" opacity=".7"/>`;
-  return `<path d="M ${cx - 6} ${y} Q ${cx} ${y + 5} ${cx + 6} ${y - 1}" fill="none" ${s}/>` +
-    `<path d="M ${cx + 1} ${y + 3.2} v 4 a 2.6 2.6 0 0 0 5.2 0 v -5.2 Z" fill="${TONGUE}" ${s}/>`;
+  if (expr === 1) return `<path d="M ${cx - 4} ${y + 1} L ${cx + 4} ${y + 1}" fill="none" ${s}/>`;
+  if (expr === 2) return `<path d="M ${cx - 5} ${y} Q ${cx} ${y + 5} ${cx + 5} ${y}" fill="none" ${s}/>`;
+  if (expr === 3) return `<path d="M ${cx - 6} ${y - 1} Q ${cx} ${y + 10} ${cx + 6} ${y - 1} Z" fill="${MOUTH_IN}" ${s}/>` +
+    `<circle cx="${cx - 17}" cy="${y - 2}" r="4" fill="${BLUSH}" opacity=".75"/><circle cx="${cx + 17}" cy="${y - 2}" r="4" fill="${BLUSH}" opacity=".75"/>`;
+  return `<path d="M ${cx - 5} ${y} Q ${cx} ${y + 4} ${cx + 5} ${y - 1}" fill="none" ${s}/>` +
+    `<path d="M ${cx + 1} ${y + 2.5} v 3.5 a 2.4 2.4 0 0 0 4.8 0 v -4.6 Z" fill="${TONGUE}" ${s}/>`;
 }
 
-function face(eyes, expr, cx, headCy) {
-  const wink = expr === 4;
-  return eye(eyes, cx - 9, headCy + 2, false) + eye(eyes, cx + 9, headCy + 2, wink) + mouth(expr, cx, headCy + 12);
+// 髮型（由咖啡因決定）：蓋在頭頂的一塊色塊，hy 為頭的中心 y
+function hair(level, cx, hy) {
+  const st = `fill="${HAIR_COLOR}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"`;
+  const P = (pts) => pts.map(([x, y], i) => `${i ? "L" : "M"} ${cx + x} ${hy + y}`).join(" ") + " Z";
+  if (level === 1) // 柔順服貼：圓潤的蓋頭，瀏海斜斜掃過
+    return `<path d="M ${cx - 39} ${hy + 4} C ${cx - 46} ${hy - 46} ${cx + 46} ${hy - 46} ${cx + 39} ${hy + 4}
+      C ${cx + 36} ${hy - 12} ${cx + 28} ${hy - 20} ${cx + 12} ${hy - 22} C ${cx} ${hy - 10} ${cx - 22} ${hy - 12} ${cx - 39} ${hy + 4} Z" ${st}/>`;
+  if (level === 2) // 整齊俐落：平整的短髮，露出額頭，旁分
+    return `<path d="M ${cx - 39} ${hy + 6} C ${cx - 46} ${hy - 44} ${cx + 46} ${hy - 44} ${cx + 39} ${hy + 6}
+      L ${cx + 33} ${hy - 6} C ${cx + 22} ${hy - 16} ${cx + 6} ${hy - 19} ${cx - 4} ${hy - 19}
+      C ${cx - 20} ${hy - 17} ${cx - 31} ${hy - 11} ${cx - 33} ${hy - 6} Z" ${st}/>` +
+      `<path d="M ${cx - 4} ${hy - 19} Q ${cx - 8} ${hy - 30} ${cx - 6} ${hy - 38}" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`;
+  return `<path d="${P([ // 頭髮炸開：向外放射的尖刺
+    [-38, 4], [-54, -12], [-37, -18], [-48, -38], [-26, -32], [-24, -54], [-9, -39], [3, -62],
+    [14, -39], [31, -54], [31, -33], [51, -39], [38, -18], [55, -12], [38, 4],
+    [27, -14], [15, -8], [2, -20], [-10, -8], [-22, -17], [-30, -6]])}" ${st}/>`;
 }
 
-// 以固定的頭、可變的軀幹與腿畫出一個角色；各圖層是獨立群組，之後可各自替換。
-// eyes：1～3（咖啡因級距）；expr：1～4（甜味來源：無／天然／糖／人工）
+function face(eyes, expr, cx, hy) {
+  const y = hy + 6, wink = expr === 4;
+  const k = 1.3; // 五官放大，Q 版的臉要讀得出來
+  return `<g transform="translate(${cx} ${y}) scale(${k}) translate(${-cx} ${-y})">` +
+    eye(eyes, cx - 11, y, false) + eye(eyes, cx + 11, y, wink) + mouth(expr, cx, y + 9) + `</g>`;
+}
+
+// Q 版：頭大、手腳短；各圖層是獨立群組，之後可各自替換。
+// eyes：1～3（咖啡因級距，眼神與髮型共用）；expr：1～4（甜味來源：無／天然／糖／人工）
 function character(bodyLevel, heightLevel, cx, eyes = 2, expr = 1) {
   const b = BODY[bodyLevel - 1], h = HEIGHT[heightLevel - 1].h;
-  const torsoH = Math.round(h * 0.58), legH = h - torsoH;
-  const legTop = GROUND - legH;
-  const torsoBottom = legTop + 6, torsoTop = torsoBottom - torsoH;
-  const headCy = torsoTop - HEAD_R + 10;
-  const legW = Math.max(14, Math.round(b.w * 0.26));
-  const legDx = b.w * 0.2;
-  const armLen = Math.round(torsoH * 0.62);
-  const stroke = `stroke="${INK}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+  const legTop = GROUND - LEG_H;
+  const torsoBottom = legTop + 6, torsoH = h - LEG_H + 6, torsoTop = torsoBottom - torsoH;
+  const hy = torsoTop - HEAD_RY + 14; // 頭與軀幹重疊，省掉脖子
+  const legW = Math.max(14, Math.round(b.w * 0.28)), legDx = b.w * 0.2;
+  const armLen = Math.round(torsoH * 0.5);
+  const stroke = `stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
 
   const arm = (side) => {
-    const x1 = cx + side * (b.w / 2 - 3), y1 = torsoTop + 14;
-    const x2 = cx + side * (b.w / 2 + 9), y2 = y1 + armLen;
-    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="15" stroke-linecap="round"/>` +
+    const x1 = cx + side * (b.w / 2 - 2), y1 = torsoTop + 14;
+    const x2 = cx + side * (b.w / 2 + 8), y2 = y1 + armLen;
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="16" stroke-linecap="round"/>` +
            `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SKIN}" stroke-width="10" stroke-linecap="round"/>`;
   };
   const leg = (side) => {
     const x = cx + side * legDx - legW / 2;
-    return `<rect x="${x}" y="${legTop}" width="${legW}" height="${legH}" rx="${legW / 2.4}" fill="${SKIN}" ${stroke}/>`;
+    return `<rect x="${x}" y="${legTop}" width="${legW}" height="${LEG_H}" rx="${legW / 2.6}" fill="${SKIN}" ${stroke}/>`;
   };
+  const torso = (fill) => `<rect x="${cx - b.w / 2}" y="${torsoTop}" width="${b.w}" height="${torsoH}"
+            rx="${Math.min(b.w / 2.2, torsoH * 0.5)}" fill="${fill}" ${stroke}/>`;
 
   return `
   <g data-body="${bodyLevel}" data-height="${heightLevel}">
     <ellipse class="shadow" cx="${cx}" cy="${GROUND + 2}" rx="${b.w / 2 + 18}" ry="6"/>
     <g data-layer="body">
-      ${leg(-1)}${leg(1)}${arm(-1)}${arm(1)}
-      <rect x="${cx - b.w / 2}" y="${torsoTop}" width="${b.w}" height="${torsoH}"
-            rx="${Math.min(b.w / 2, torsoH * 0.45)}" fill="${SKIN}" ${stroke}/>
-      <circle cx="${cx}" cy="${headCy}" r="${HEAD_R}" fill="${SKIN}" ${stroke}/>
+      ${leg(-1)}${leg(1)}${arm(-1)}${arm(1)}${torso(SKIN)}
     </g>
-    <g data-layer="outfit"></g>
-    <g data-layer="face">${face(eyes, expr, cx, headCy)}</g>
-    <g data-layer="hair"></g>
+    <g data-layer="outfit">${torso(SHIRT)}</g><!-- 暫用的預設上衣，8 種服裝版型畫好後取代 -->
+    <g data-layer="head"><ellipse cx="${cx}" cy="${hy}" rx="${HEAD_RX}" ry="${HEAD_RY}" fill="${SKIN}" ${stroke}/></g><!-- 頭畫在服裝之上，才不會被衣服蓋住下巴 -->
+    <g data-layer="face">${face(eyes, expr, cx, hy)}</g>
+    <g data-layer="hair">${hair(eyes, cx, hy)}</g>
     <g data-layer="accessories"></g>
   </g>`;
 }
@@ -203,7 +184,7 @@ HEIGHT.forEach((ht, hi) => {
   rows.insertAdjacentHTML("beforeend", `
     <section class="row">
       <h2>${ht.name}<span>${ht.volume}</span></h2>
-      <svg viewBox="0 48 600 212" role="img" aria-label="${ht.name}身高的四種體型">
+      <svg viewBox="0 64 600 200" role="img" aria-label="${ht.name}身高的四種體型">
         <line class="ground" x1="8" y1="${GROUND + 4}" x2="592" y2="${GROUND + 4}" stroke-width="2"/>
         ${chars}
       </svg>
@@ -211,19 +192,14 @@ HEIGHT.forEach((ht, hi) => {
     </section>`);
 });
 
-document.querySelectorAll(".toggle button").forEach(btn => btn.addEventListener("click", () => {
-  document.querySelectorAll(".toggle button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
-  document.querySelector("main").classList.toggle("sketch", btn.dataset.style === "sketch");
-}));
-
 const faces = document.getElementById("faces");
 EXPR.forEach((ex, xi) => {
   const chars = EYES.map((_, ei) => character(3, 2, 100 + ei * 200, ei + 1, xi + 1)).join("");
-  const labels = EYES.map(e => `<div><b>${e.name}</b><i>${e.caffeine}</i></div>`).join("");
+  const labels = EYES.map(e => `<div><b>${e.name}／${e.hair}</b><i>${e.caffeine}</i></div>`).join("");
   faces.insertAdjacentHTML("beforeend", `
     <section class="row">
       <h2>${ex.name}<span>${ex.sweetener}</span></h2>
-      <svg viewBox="0 76 600 184" role="img" aria-label="表情${ex.name}搭配三種眼神">
+      <svg viewBox="0 64 600 200" role="img" aria-label="表情${ex.name}搭配三種眼神">
         <line class="ground" x1="8" y1="${GROUND + 4}" x2="592" y2="${GROUND + 4}" stroke-width="2"/>
         ${chars}
       </svg>
