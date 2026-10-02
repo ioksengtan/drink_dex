@@ -1,0 +1,34 @@
+{
+  "canvas": "512x512 RGBA transparent",
+  "anchor": "shared canvas; head center approx (256,180), body/outfit center approx (256,355)",
+  "layer_order": [
+    "hair_back",
+    "body",
+    "outfit",
+    "head",
+    "face",
+    "hair_front",
+    "accessory"
+  ],
+  "files": [
+    "head_1.png",
+    "eyes_1_left.png",
+    "eyes_1_right.png",
+    "eyes_2_left.png",
+    "eyes_2_right.png",
+    "eyes_3_left.png",
+    "eyes_3_right.png",
+    "eyes_wink.png",
+    "mouth_1.png",
+    "mouth_2.png",
+    "mouth_3.png",
+    "mouth_4.png",
+    "mouth_blush.png",
+    "mouth_tongue.png",
+    "hair_1_front.png",
+    "hair_1_back.png",
+    "body_3_2.png",
+    "outfit_green_3.png"
+  ],
+  "note": "Prototype extraction/alignment from approved AI art direction sheet. Use to test compositing before full batch."
+}
